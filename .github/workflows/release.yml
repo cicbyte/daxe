@@ -46,12 +46,24 @@ jobs:
           echo "ldflags=${LDFLAGS}" >> "$GITHUB_OUTPUT"
 
       - name: Build Windows
+        env:
+          CGO_ENABLED: 0
+          GOOS: windows
+          GOARCH: amd64
         run: go build -ldflags "${{ steps.buildvars.outputs.ldflags }}" -o dist/daxe_windows_amd64.exe
 
       - name: Build Linux
+        env:
+          CGO_ENABLED: 0
+          GOOS: linux
+          GOARCH: amd64
         run: go build -ldflags "${{ steps.buildvars.outputs.ldflags }}" -o dist/daxe_linux_amd64
 
       - name: Build macOS
+        env:
+          CGO_ENABLED: 0
+          GOOS: darwin
+          GOARCH: amd64
         run: go build -ldflags "${{ steps.buildvars.outputs.ldflags }}" -o dist/daxe_darwin_amd64
 
       - name: Upload Release Assets
