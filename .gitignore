@@ -1,0 +1,50 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test
+*.test
+
+# Coverage
+*.out
+coverage.out
+
+# Build output
+build/
+dist/
+
+# Dependencies
+vendor/
+
+# IDE
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+
+# Temp files
+*.tmp
+msg.txt
+
+# Project specific
+.claude/
+CLAUDE.md
+*test*
+*.pdf
+*.xmind
+output/
