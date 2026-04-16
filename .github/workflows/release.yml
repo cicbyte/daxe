@@ -41,7 +41,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.tag }}
         run: |
           COMMIT=$(git rev-parse HEAD)
-          BUILDTIME=$(date -u '+%Y-%m-%d %H:%M:%S')
+          BUILDTIME=$(date -u '+%Y-%m-%dT%H:%M:%S')
           LDFLAGS="-s -w -X main.Version=${VERSION} -X main.GitCommit=${COMMIT} -X main.BuildTime=${BUILDTIME}"
           echo "ldflags=${LDFLAGS}" >> "$GITHUB_OUTPUT"
 
