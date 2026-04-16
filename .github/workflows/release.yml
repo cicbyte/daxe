@@ -35,20 +35,24 @@ jobs:
           fi
           echo "tag=${VERSION}" >> "$GITHUB_OUTPUT"
 
-      - name: Build Windows
+      - name: Prepare build vars
+        id: buildvars
         env:
           VERSION: ${{ steps.version.outputs.tag }}
-        run: go build -ldflags "-s -w -X main.Version=${VERSION} -X main.GitCommit=$(git rev-parse HEAD) -X main.BuildTime=$(date -u '+%Y-%m-%d %H:%M:%S')" -o dist/daxe_windows_amd64.exe
+        run: |
+          COMMIT=$(git rev-parse HEAD)
+          BUILDTIME=$(date -u '+%Y-%m-%d %H:%M:%S')
+          LDFLAGS="-s -w -X main.Version=${VERSION} -X main.GitCommit=${COMMIT} -X main.BuildTime=${BUILDTIME}"
+          echo "ldflags=${LDFLAGS}" >> "$GITHUB_OUTPUT"
+
+      - name: Build Windows
+        run: go build -ldflags "${{ steps.buildvars.outputs.ldflags }}" -o dist/daxe_windows_amd64.exe
 
       - name: Build Linux
-        env:
-          VERSION: ${{ steps.version.outputs.tag }}
-        run: go build -ldflags "-s -w -X main.Version=${VERSION} -X main.GitCommit=$(git rev-parse HEAD) -X main.BuildTime=$(date -u '+%Y-%m-%d %H:%M:%S')" -o dist/daxe_linux_amd64
+        run: go build -ldflags "${{ steps.buildvars.outputs.ldflags }}" -o dist/daxe_linux_amd64
 
       - name: Build macOS
-        env:
-          VERSION: ${{ steps.version.outputs.tag }}
-        run: go build -ldflags "-s -w -X main.Version=${VERSION} -X main.GitCommit=$(git rev-parse HEAD) -X main.BuildTime=$(date -u '+%Y-%m-%d %H:%M:%S')" -o dist/daxe_darwin_amd64
+        run: go build -ldflags "${{ steps.buildvars.outputs.ldflags }}" -o dist/daxe_darwin_amd64
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
