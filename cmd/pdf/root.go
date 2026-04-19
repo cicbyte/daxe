@@ -28,16 +28,20 @@ func GetPDFCommand() *cobra.Command {
 	pdfCmd := &cobra.Command{
 		Use:   "pdf",
 		Short: "PDF文件处理工具",
-		Long: `PDF文件处理工具集，支持图片提取等功能。
+		Long: `PDF文件处理工具集，支持图片提取、文件拆分等功能。
 
 示例:
   daxe pdf images input.pdf -o ./output
   daxe pdf images input.pdf -o ./output --pages 1,3,5-8 --format jpeg --quality 90
-  daxe pdf images "*.pdf" -o ./output --batch`,
+  daxe pdf images "*.pdf" -o ./output --batch
+  daxe pdf split input.pdf -o ./output --pages 1,3,5-8
+  daxe pdf split input.pdf -o ./output --every 10
+  daxe pdf split input.pdf -o ./output --page 5`,
 	}
 
 	// 添加所有子命令
 	pdfCmd.AddCommand(getImagesCommand())
+	pdfCmd.AddCommand(getSplitCommand())
 
 	return pdfCmd
 }

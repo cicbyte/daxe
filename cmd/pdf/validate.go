@@ -161,3 +161,60 @@ func validateThreads(threads int) error {
 	}
 	return nil
 }
+
+// validateSplitParams 验证split子命令参数
+func validateSplitParams(inputFile, outputDir, pages string, every, page int) error {
+	// 验证输入文件
+	if inputFile == "" {
+		return fmt.Errorf("必须指定PDF文件")
+	}
+
+	// 验证文件扩展名
+	ext := strings.ToLower(filepath.Ext(inputFile))
+	if ext != ".pdf" {
+		return fmt.Errorf("文件必须是PDF格式，当前格式: %s", ext)
+	}
+
+	// 验证输出目录
+	if outputDir == "" {
+		return fmt.Errorf("必须指定输出目录")
+	}
+
+	// 验证互斥参数：--pages, --every, --page 三选一
+	modeCount := 0
+	if pages != "" {
+		modeCount++
+	}
+	if every > 0 {
+		modeCount++
+	}
+	if page > 0 {
+		modeCount++
+	}
+
+	if modeCount == 0 {
+		return fmt.Errorf("必须指定拆分模式: --pages, --every, 或 --page")
+	}
+	if modeCount > 1 {
+		return fmt.Errorf("--pages, --every, --page 三种模式互斥，只能指定一个")
+	}
+
+	// 验证 --every
+	if every > 0 && every < 1 {
+		return fmt.Errorf("--every 的值必须大于0")
+	}
+
+	// 验证 --page
+	if page > 0 && page < 1 {
+		return fmt.Errorf("--page 的值必须大于0")
+	}
+
+	// 验证页面范围格式
+	if pages != "" {
+		if err := validatePageRangeFormat(pages); err != nil {
+			return fmt.Errorf("页面范围验证失败: %w", err)
+		}
+	}
+
+	return nil
+}
