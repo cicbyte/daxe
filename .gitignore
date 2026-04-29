@@ -48,3 +48,5 @@ CLAUDE.md
 *.pdf
 *.xmind
 output/
+
+.reference/
